@@ -54,7 +54,11 @@ public class SimulateurReusine implements ICalculateurImpot{
     private int revenuNet = 0;
     private int nbEnfant = 0;
     private int nbEnfantHandicape = 0;
-
+    private boolean isParentIsole = false;
+    private SituationFamiliale situationFamiliale = SituationFamiliale.CELIBATAIRE;
+    
+    //Donnée Client 
+    
     private double revenuFiscalReference = 0;
     private double revenuImposable = 0;
 
@@ -67,63 +71,68 @@ public class SimulateurReusine implements ICalculateurImpot{
     private double montantImpotDeclarant = 0;
     private double montantImpot = 0;
 
-    private boolean isParentIsole = false;
-    private SituationFamiliale situationFamiliale;
-
     
-    
-    
+    //Fonction de Paramètrage
     @Override
-    public void setRevenusNet(int rn) {
+    public void setRevenusNet(int revenuNet) {
+    	this.revenuNet = revenuNet;
     }
     
     @Override
-    public void setSituationFamiliale(SituationFamiliale sf) {
+    public void setSituationFamiliale(SituationFamiliale situationFamiliale) {
+    	this.situationFamiliale = situationFamiliale;
     }
 
     @Override
-    public void setNbEnfantsACharge(int nbe) {
+    public void setNbEnfantsACharge(int nbEnfant) {
+    	this.nbEnfant = nbEnfant;
     }
 
     @Override
-    public void setNbEnfantsSituationHandicap(int nbesh) {
+    public void setNbEnfantsSituationHandicap(int nbEnfantHandicape) {
+    	this.nbEnfantHandicape = nbEnfantHandicape;
     }
 
     @Override
-    public void setParentIsole(boolean pi) {
-    }
-
-    @Override
-    public void calculImpotSurRevenuNet() {
+    public void setParentIsole(boolean isParentIsole) {
+    	this.isParentIsole = isParentIsole;
     }
     
+   
+    //Fonction d'acquisition d'information
     @Override
     public int getRevenuFiscalReference() {
-        return;   
+        return (int) Math.round(revenuFiscalReference);   
     }
 
     @Override
     public int getAbattement() {
-        return ;
+        return (int) Math.round(abatement);
     }
 
     @Override
     public double getNbPartsFoyerFiscal() {
-        return ;
+        return nbParts;
     }
 
     @Override
     public int getImpotAvantDecote() {
-        return;
+        return getImpotSurRevenuNet() + getDecote();
     }
 
     @Override
     public int getDecote() {
-        return ;
+        return (int) Math.round(decote);
     }
 
     @Override
     public int getImpotSurRevenuNet() {
-        return;
+        return (int) Math.round(montantImpot);
+    }
+    
+    
+    //Fonction de calcul
+    @Override
+    public void calculImpotSurRevenuNet() {
     }
 }
