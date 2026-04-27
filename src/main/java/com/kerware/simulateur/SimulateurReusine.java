@@ -135,59 +135,6 @@ public class SimulateurReusine implements ICalculateurImpot{
     /*
     @Override
     public void calculImpotSurRevenuNet() {
-        // Abattement
-
-        abt = rNet * tAbt;
-
-        if (abt > lAbtMax) {
-            abt = lAbtMax;
-        }
-
-        if (abt < lAbtMin) {
-            abt = lAbtMin;
-        }
-
-
-        rFRef = rNet - abt;
-
-        // parts déclarants
-        switch ( sitFam ) {
-            case CELIBATAIRE:
-                nbPtsDecl = 1;
-                break;
-            case MARIE:
-                nbPtsDecl = 2;
-                break;
-            case DIVORCE:
-                nbPtsDecl = 1;
-                break;
-            case VEUF:
-                if ( nbEnf == 0 ) {
-                    nbPtsDecl = 1;
-                } else {
-                    nbPtsDecl = 2;
-                }
-                nbPtsDecl = 1;
-                break;
-        }
-
-        // parts enfants à charge
-        if ( nbEnf <= 2 ) {
-            nbPts = nbPtsDecl + nbEnf * 0.5;
-        } else if ( nbEnf > 2 ) {
-            nbPts = nbPtsDecl+  1.0 + ( nbEnf - 2 );
-        }
-
-        // parent isolé
-        if ( parIso ) {
-            if ( nbEnf > 0 ){
-                nbPts = nbPts + 0.5;
-            }
-        }
-
-        // enfant handicapé
-        nbPts = nbPts + nbEnfH * 0.5;
-
         // impôt des declarants
         rImposable = rFRef / nbPtsDecl ;
 
@@ -264,6 +211,8 @@ public class SimulateurReusine implements ICalculateurImpot{
     public void calculImpotSurRevenuNet() {
     	calculAbatement();
     	calculParts();
+    	calculImpotDeclarantAvantDecote();
+    	calculImpotTotalAvantDecote();
     	
     }
     
@@ -317,6 +266,46 @@ public class SimulateurReusine implements ICalculateurImpot{
 
         //Ajout des part suplémentaire pour chaque cas d'enfant handicapé
         nbParts = nbParts + nbEnfantHandicape * 0.5;
+    }
+    
+    private void calculImpotDeclarantAvantDecote() {
+    	revenuImposable = revenuFiscalReference / nbPartsDeclarant ;
+
+    	montantImpotDeclarant = 0;
+
+        int i = 0;
+        do {
+            if ( revenuImposable >= PALIER_IMPOT[i] && revenuImposable < PALIER_IMPOT[i+1] ) {
+            	montantImpotDeclarant += ( revenuImposable - PALIER_IMPOT[i] ) * TAUX_IMPOT[i];
+                break;
+            } else {
+            	montantImpotDeclarant += ( PALIER_IMPOT[i+1] - PALIER_IMPOT[i] ) * TAUX_IMPOT[i];
+            }
+            i++;
+        } while( i < 5);
+
+        montantImpotDeclarant = montantImpotDeclarant * nbPartsDeclarant;
+        montantImpotDeclarant = Math.round( montantImpotDeclarant );
+    }
+    
+    private void calculImpotTotalAvantDecote() {
+        revenuImposable =  revenuFiscalReference / nbPartsDeclarant;
+        montantImpot = 0;
+        i = 0;
+
+        int i = 0;
+        do {
+            if ( revenuImposable >= PALIER_IMPOT[i] && revenuImposable < PALIER_IMPOT[i+1] ) {
+            	montantImpot += ( revenuImposable - PALIER_IMPOT[i] ) * TAUX_IMPOT[i];
+                break;
+            } else {
+            	montantImpot += ( PALIER_IMPOT[i+1] - PALIER_IMPOT[i] ) * TAUX_IMPOT[i];
+            }
+            i++;
+        } while( i < 5);
+
+        montantImpot = montantImpot * nbParts;
+        montantImpot = Math.round( montantImpot );
     }
     
 }
