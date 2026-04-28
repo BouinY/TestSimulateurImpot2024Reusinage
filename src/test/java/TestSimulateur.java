@@ -6,13 +6,14 @@ import org.junit.jupiter.api.Test;
 
 import com.kerware.simulateur.AdaptateurCodeHerite;
 import com.kerware.simulateur.ICalculateurImpot;
+import com.kerware.simulateur.SimulateurReusine;
 import com.kerware.simulateur.SituationFamiliale;
 
 
 public class TestSimulateur {
 	static final int CODE_HERITE = 1;
 	static final int CODE_REUSINE = 2;
-	static final int CODE = CODE_HERITE;
+	static final int CODE = CODE_REUSINE;
 	
 	static ICalculateurImpot calculateur;
 	
@@ -20,7 +21,7 @@ public class TestSimulateur {
 	public static void prepareCalculateurImpot() {
 		switch(CODE) {
 			case CODE_HERITE -> calculateur = new AdaptateurCodeHerite();
-			case CODE_REUSINE -> calculateur = null ; //A faire
+			case CODE_REUSINE -> calculateur = new SimulateurReusine();
 		}
 	}
 

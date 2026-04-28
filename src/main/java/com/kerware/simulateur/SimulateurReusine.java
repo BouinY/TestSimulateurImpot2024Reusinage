@@ -130,95 +130,29 @@ public class SimulateurReusine implements ICalculateurImpot{
         return (int) Math.round(montantImpot);
     }
     
-    
-    //Fonction de calcul
-    /*
+    //Fonction de calcul    
     @Override
     public void calculImpotSurRevenuNet() {
-        // impôt des declarants
-        rImposable = rFRef / nbPtsDecl ;
-
-        mImpDecl = 0;
-
-        int i = 0;
-        do {
-            if ( rImposable >= limites[i] && rImposable < limites[i+1] ) {
-                mImpDecl += ( rImposable - limites[i] ) * taux[i];
-                break;
-            } else {
-                mImpDecl += ( limites[i+1] - limites[i] ) * taux[i];
-            }
-            i++;
-        } while( i < 5);
-
-        mImpDecl = mImpDecl * nbPtsDecl;
-        mImpDecl = Math.round( mImpDecl );
-
-        // impôt foyer fiscal complet
-        rImposable =  rFRef / nbPts;
-        mImp = 0;
-        i = 0;
-
-        do {
-            if ( rImposable >= limites[i] && rImposable < limites[i+1] ) {
-                mImp += ( rImposable - limites[i] ) * taux[i];
-                break;
-            } else {
-                mImp += ( limites[i+1] - limites[i] ) * taux[i];
-            }
-            i++;
-        } while( i < 5);
-
-        mImp = mImp * nbPts;
-        mImp = Math.round( mImp );
-
-        // baisse impot
-        double baisseImpot = mImpDecl - mImp;
-
-        // dépassement plafond
-        double ecartPts = nbPts - nbPtsDecl;
-
-        double plafond = (ecartPts / 0.5) * plafDemiPart;
-
-        if ( baisseImpot >= plafond ) {
-            mImp = mImpDecl - plafond;
-        }
-
-        decote = 0;
-        // decote
-        if ( nbPtsDecl == 1 ) {
-            if ( mImp < seuilDecoteDeclarantSeul ) {
-                 decote = decoteMaxDeclarantSeul - ( mImp  * tauxDecote );
-            }
-        }
-        if (  nbPtsDecl == 2 ) {
-            if ( mImp < seuilDecoteDeclarantCouple ) {
-                 decote =  decoteMaxDeclarantCouple - ( mImp  * tauxDecote  );
-            }
-        }
-        decote = Math.round( decote );
-        if ( mImp <= decote ) {
-            decote = mImp;
-        }
-
-        mImp = Math.round(mImp) - decote;
-
-        return (long) mImp;
-    }
-    */
-    
-    @Override
-    public void calculImpotSurRevenuNet() {
-    	calculAbatement();
+        System.out.println("Paramètre de calcul : \n"
+        		+ "Revenu Net : " + revenuNet + "\n" + "Enfant Total : " + nbEnfantTotal + "\n" 
+        		+ "Enfant Handicapé : " + nbEnfantHandicape + "\n" + "Est un parent isolé : " + isParentIsole + "\n"
+        		+ "Situation familiale : " + situationFamiliale + "\n");
+    	
+        calculAbatement();
     	calculParts();
     	calculImpotDeclarantAvantDecote();
     	calculImpotTotalAvantDecote();
-    	
+    	calculPlafond();
+    	calculDecote();
+    	montantImpot = Math.round(montantImpot) - decote;
+    	System.out.println("\n-----\n");
     }
     
     private void calculAbatement() {
         abatement = revenuNet * TAUX_ABATEMENT;
-
+        
+        System.out.println("L'abattement avant l'application des paliers est : " + abatement );
+       
         if (abatement > PALIER_MAXIMUM_POUR_ABATEMENT) {
             abatement = PALIER_MAXIMUM_POUR_ABATEMENT;
         }
@@ -226,12 +160,16 @@ public class SimulateurReusine implements ICalculateurImpot{
         if (abatement < PALIER_MINIMUM_POUR_ABATEMENT) {
             abatement = PALIER_MINIMUM_POUR_ABATEMENT;
         }
+        
+        System.out.println("L'abattement après l'application des paliers est : " + abatement);
 
         revenuFiscalReference = revenuNet - abatement;
+        
+        System.out.println("Le revenue fiscal de reference est : " + revenuFiscalReference);
     }
     
     private void calculParts() {
-    	//µPartie des déclarants
+    	//Partie des déclarants
         switch ( situationFamiliale ) {
             case CELIBATAIRE:
             	nbPartsDeclarant = 1; break;
@@ -266,6 +204,7 @@ public class SimulateurReusine implements ICalculateurImpot{
 
         //Ajout des part suplémentaire pour chaque cas d'enfant handicapé
         nbParts = nbParts + nbEnfantHandicape * 0.5;
+        System.out.print("Nombre de parts : " + nbParts);
     }
     
     private void calculImpotDeclarantAvantDecote() {
@@ -286,13 +225,13 @@ public class SimulateurReusine implements ICalculateurImpot{
 
         montantImpotDeclarant = montantImpotDeclarant * nbPartsDeclarant;
         montantImpotDeclarant = Math.round( montantImpotDeclarant );
+        System.out.print("Impot declarant : " + montantImpotDeclarant);
     }
     
     private void calculImpotTotalAvantDecote() {
-        revenuImposable =  revenuFiscalReference / nbPartsDeclarant;
+        revenuImposable =  revenuFiscalReference / nbParts;
         montantImpot = 0;
-        i = 0;
-
+        
         int i = 0;
         do {
             if ( revenuImposable >= PALIER_IMPOT[i] && revenuImposable < PALIER_IMPOT[i+1] ) {
@@ -306,6 +245,49 @@ public class SimulateurReusine implements ICalculateurImpot{
 
         montantImpot = montantImpot * nbParts;
         montantImpot = Math.round( montantImpot );
+        System.out.print("Impot total avant decote : " + montantImpot);
+    }
+    
+    private void calculPlafond() {
+        // baisse impot
+        double baisseImpot = montantImpotDeclarant - montantImpot;
+        System.out.print("Baisse d'impot avant plafond : " + baisseImpot);
+        
+        // dépassement plafond
+        double ecartParts = nbParts - nbPartsDeclarant;
+
+        double plafond = (ecartParts / 0.5) * PLAFOND_POUR_DEMI_PART;
+        System.out.print("Plafond : " + plafond);
+        
+        if ( baisseImpot >= plafond ) {
+        	System.out.print("Baisse d'impot supérieur au plafond, le plafond est appliqué ");
+        	montantImpot = montantImpotDeclarant - plafond;
+        }
+        
+        //La baisse d'impot n'est jamais appliquer si elle ne depasse pas le plafond, étant coder ainsi dans le simulateur originelle, je ne l'ai pas changer pour gharder les test cohérent.
+        
+    }
+    
+    private void calculDecote() {
+        decote = 0;
+        if ( nbPartsDeclarant == 1 ) {
+            if ( montantImpot < SEUIL_DECOTE_DECLARANT_SEUL ) {
+                 decote = DECOTE_MAX_DECLARANT_SEUL - ( montantImpot  * TAUX_DECOTE );
+            }
+        }
+        
+        if (  nbPartsDeclarant == 2 ) {
+            if ( montantImpot < SEUIL_DECOTE_DECLARANT_COUPLE ) {
+                 decote =  DECOTE_MAX_DECLARANT_COUPLE - ( montantImpot  * TAUX_DECOTE  );
+         
+            }
+        }
+        
+        decote = Math.round( decote );
+        if ( montantImpot <= decote ) {
+            decote = montantImpot;
+        }
+        System.out.print("Decote : " + decote);
     }
     
 }
