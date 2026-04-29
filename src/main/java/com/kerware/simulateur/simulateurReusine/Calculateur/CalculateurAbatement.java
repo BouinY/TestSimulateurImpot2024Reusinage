@@ -5,7 +5,7 @@ import com.kerware.simulateur.simulateurReusine.ImpotDataConstante;
 public class CalculateurAbatement implements ImpotDataConstante {
 	
 	
-    public double calculAbatement(int revenuNet)  {
+    public static double calcul(int revenuNet)  {
         double abatement = revenuNet * TAUX_ABATEMENT;
         
         System.out.println("L'abattement avant l'application des paliers est : " + abatement );

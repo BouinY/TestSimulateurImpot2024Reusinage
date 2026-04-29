@@ -3,7 +3,7 @@ package com.kerware.simulateur.simulateurReusine.Calculateur;
 import com.kerware.simulateur.simulateurReusine.ImpotDataConstante;
 
 public class CalculateurImpotDeclarant implements ImpotDataConstante{
-    private double calcul(double revenuFiscalReference, double nbPartsDeclarant) {
+    public static double calcul(double revenuFiscalReference, double nbPartsDeclarant) {
     	double revenuImposable = revenuFiscalReference / nbPartsDeclarant ;
 
     	double montantImpotDeclarant = 0;
@@ -21,7 +21,7 @@ public class CalculateurImpotDeclarant implements ImpotDataConstante{
 
         montantImpotDeclarant = montantImpotDeclarant * nbPartsDeclarant;
         montantImpotDeclarant = Math.round( montantImpotDeclarant );
-        System.out.print("Impot declarant : " + montantImpotDeclarant);
+        System.out.println("Impot declarant : " + montantImpotDeclarant);
         return montantImpotDeclarant;
     }
 }

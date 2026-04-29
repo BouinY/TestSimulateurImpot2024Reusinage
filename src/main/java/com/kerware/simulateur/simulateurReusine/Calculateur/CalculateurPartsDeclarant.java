@@ -3,7 +3,7 @@ package com.kerware.simulateur.simulateurReusine.Calculateur;
 import com.kerware.simulateur.SituationFamiliale;
 
 public class CalculateurPartsDeclarant {
-    public double calculPartsDeclarant(SituationFamiliale situationFamiliale) {
+    public static double calcul(SituationFamiliale situationFamiliale) {
     	
     	double nbPartsDeclarant = 0;
     	
@@ -27,7 +27,7 @@ public class CalculateurPartsDeclarant {
                 break;
         }
         
-        System.out.print("Nombre de parts : " + nbPartsDeclarant);
+        System.out.println("Nombre de parts declarant : " + nbPartsDeclarant);
         return nbPartsDeclarant;        
     }
 }

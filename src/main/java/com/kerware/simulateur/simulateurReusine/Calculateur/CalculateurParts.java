@@ -3,7 +3,7 @@ package com.kerware.simulateur.simulateurReusine.Calculateur;
 import com.kerware.simulateur.SituationFamiliale;
 
 public class CalculateurParts {
-	   	public double calcul(double nbPartsDeclarant, double nbEnfantTotal, double nbEnfantHandicape , boolean isParentIsole) {
+	   	public static double calcul(double nbPartsDeclarant, double nbEnfantTotal, double nbEnfantHandicape , boolean isParentIsole) {
 	    	
 	    	double nbParts = 0; 
 
@@ -21,7 +21,7 @@ public class CalculateurParts {
 
 	        //Ajout des part suplémentaire pour chaque cas d'enfant handicapé
 	        nbParts = nbParts + nbEnfantHandicape * 0.5;
-	        System.out.print("Nombre de parts : " + nbParts);
+	        System.out.println("Nombre de parts total : " + nbParts);
 			
 	        return nbParts;       
 	    }

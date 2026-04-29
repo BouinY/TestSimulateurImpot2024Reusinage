@@ -4,6 +4,13 @@ import java.util.ArrayList;
 
 import com.kerware.simulateur.ICalculateurImpot;
 import com.kerware.simulateur.SituationFamiliale;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurAbatement;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurDecote;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurImpotAvantDecote;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurImpotDeclarant;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurParts;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurPartsDeclarant;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurPlafond;
 
 public class SimulateurReusine implements ICalculateurImpot{
 	
@@ -86,6 +93,7 @@ public class SimulateurReusine implements ICalculateurImpot{
     public int getImpotSurRevenuNet() {
         return (int) Math.round(montantImpot);
     }
+          
     
     //Fonction de calcul    
     @Override
@@ -95,81 +103,24 @@ public class SimulateurReusine implements ICalculateurImpot{
         		+ "Enfant Handicapé : " + nbEnfantHandicape + "\n" + "Est un parent isolé : " + isParentIsole + "\n"
         		+ "Situation familiale : " + situationFamiliale + "\n");
     	
-        calculAbatement();
-    	calculParts();
-    	calculImpotDeclarantAvantDecote();
-    	calculImpotTotalAvantDecote();
-    	calculPlafond();
-    	calculDecote();
+        abatement = CalculateurAbatement.calcul(revenuNet);
+        revenuFiscalReference = revenuNet - abatement;
+
+        nbPartsDeclarant = CalculateurPartsDeclarant.calcul(situationFamiliale);
+        nbParts = CalculateurParts.calcul(nbPartsDeclarant, nbEnfantTotal, nbEnfantHandicape, isParentIsole);
+        
+        montantImpotDeclarant = CalculateurImpotDeclarant.calcul(revenuFiscalReference, nbPartsDeclarant);
+        montantImpot = CalculateurImpotAvantDecote.calcul(revenuFiscalReference, nbParts);
+    	
+        montantImpot = CalculateurPlafond.calcul(montantImpotDeclarant, montantImpot, nbParts, nbPartsDeclarant);
+        decote = CalculateurDecote.calcul(montantImpot, nbPartsDeclarant);
+    	
     	montantImpot = Math.round(montantImpot) - decote;
     	System.out.println("\n-----\n");
     }
 
-    
 
     
 
-    
-    private void calculImpotTotalAvantDecote() {
-        revenuImposable =  revenuFiscalReference / nbParts;
-        montantImpot = 0;
-        
-        int i = 0;
-        do {
-            if ( revenuImposable >= PALIER_IMPOT[i] && revenuImposable < PALIER_IMPOT[i+1] ) {
-            	montantImpot += ( revenuImposable - PALIER_IMPOT[i] ) * TAUX_IMPOT[i];
-                break;
-            } else {
-            	montantImpot += ( PALIER_IMPOT[i+1] - PALIER_IMPOT[i] ) * TAUX_IMPOT[i];
-            }
-            i++;
-        } while( i < 5);
-
-        montantImpot = montantImpot * nbParts;
-        montantImpot = Math.round( montantImpot );
-        System.out.print("Impot total avant decote : " + montantImpot);
-    }
-    
-    private void calculPlafond() {
-        // baisse impot
-        double baisseImpot = montantImpotDeclarant - montantImpot;
-        System.out.print("Baisse d'impot avant plafond : " + baisseImpot);
-        
-        // dépassement plafond
-        double ecartParts = nbParts - nbPartsDeclarant;
-
-        double plafond = (ecartParts / 0.5) * PLAFOND_POUR_DEMI_PART;
-        System.out.print("Plafond : " + plafond);
-        
-        if ( baisseImpot >= plafond ) {
-        	System.out.print("Baisse d'impot supérieur au plafond, le plafond est appliqué ");
-        	montantImpot = montantImpotDeclarant - plafond;
-        }
-        
-        //La baisse d'impot n'est jamais appliquer si elle ne depasse pas le plafond, étant coder ainsi dans le simulateur originelle, je ne l'ai pas changer pour gharder les test cohérent.
-        
-    }
-    
-    private void calculDecote() {
-        decote = 0;
-        if ( nbPartsDeclarant == 1 ) {
-            if ( montantImpot < SEUIL_DECOTE_DECLARANT_SEUL ) {
-                 decote = DECOTE_MAX_DECLARANT_SEUL - ( montantImpot  * TAUX_DECOTE );
-            }
-        }
-        
-        if (  nbPartsDeclarant == 2 ) {
-            if ( montantImpot < SEUIL_DECOTE_DECLARANT_COUPLE ) {
-                 decote =  DECOTE_MAX_DECLARANT_COUPLE - ( montantImpot  * TAUX_DECOTE  );
-         
-            }
-        }
-        
-        decote = Math.round( decote );
-        if ( montantImpot <= decote ) {
-            decote = montantImpot;
-        }
-        System.out.print("Decote : " + decote);
-    }
     
 }
