@@ -39,21 +39,38 @@ public class SimulateurReusine implements ICalculateurImpot{
     //Fonction de Paramètrage
     @Override
     public void setRevenusNet(int revenuNet) {
-    	this.revenuNet = revenuNet;
+        if (revenuNet < 0) {
+            throw new IllegalArgumentException("Le revenu net ne peut pas être négatif");
+        }
+        this.revenuNet = revenuNet;
     }
     
     @Override
     public void setSituationFamiliale(SituationFamiliale situationFamiliale) {
+        if (situationFamiliale == null) {
+            throw new IllegalArgumentException("La situation familiale ne peut pas être nulle");
+        }
     	this.situationFamiliale = situationFamiliale;
     }
 
     @Override
     public void setNbEnfantsACharge(int nbEnfant) {
+        if (nbEnfant < 0) {
+            throw new IllegalArgumentException("Le nombre d'enfants ne peut pas être négatif");
+        }
+        
     	this.nbEnfantTotal = nbEnfant;
     }
 
     @Override
     public void setNbEnfantsSituationHandicap(int nbEnfantHandicape) {
+        if (nbEnfantHandicape < 0) {
+            throw new IllegalArgumentException("Le nombre d'enfants avec handicap ne peut pas être négatif");
+        }
+        if (nbEnfantHandicape > this.nbEnfantTotal) {
+            throw new IllegalArgumentException("Le nombre d'enfants avec handicap ne peut pas dépasser le nombre total d'enfants");
+        }
+    	    
     	this.nbEnfantHandicape = nbEnfantHandicape;
     }
 

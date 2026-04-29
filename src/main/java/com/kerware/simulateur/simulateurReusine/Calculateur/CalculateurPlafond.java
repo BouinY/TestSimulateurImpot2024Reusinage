@@ -3,6 +3,7 @@ package com.kerware.simulateur.simulateurReusine.Calculateur;
 import com.kerware.simulateur.simulateurReusine.ImpotDataConstante;
 
 public class CalculateurPlafond implements ImpotDataConstante {
+	
     public static double calcul(double montantImpotDeclarant, double montantImpot,double nbParts, double nbPartsDeclarant) {
         // baisse impot
         double baisseImpot = montantImpotDeclarant - montantImpot;
