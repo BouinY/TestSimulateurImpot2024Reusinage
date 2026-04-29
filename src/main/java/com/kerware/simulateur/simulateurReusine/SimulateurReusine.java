@@ -1,55 +1,12 @@
-package com.kerware.simulateur;
+package com.kerware.simulateur.simulateurReusine;
 
 import java.util.ArrayList;
 
+import com.kerware.simulateur.ICalculateurImpot;
+import com.kerware.simulateur.SituationFamiliale;
+
 public class SimulateurReusine implements ICalculateurImpot{
 	
-    private static final int PALIER_IMPOT_N00 = 0 ;
-    private static final int PALIER_IMPOT_N01 = 11294;
-    private static final int PALIER_IMPOT_N02 = 28797;
-    private static final int PALIER_IMPOT_N03 = 82341;
-    private static final int PALIER_IMPOT_N04 = 177106;
-    private static final int PALIER_IMPOT_N05 = Integer.MAX_VALUE;
-
-    private static final int[] PALIER_IMPOT = {
-    	    PALIER_IMPOT_N00, 
-    	    PALIER_IMPOT_N01, 
-    	    PALIER_IMPOT_N02, 
-    	    PALIER_IMPOT_N03, 
-    	    PALIER_IMPOT_N04, 
-    	    PALIER_IMPOT_N05
-    	};
-
-    
-    private static final double TAUX_IMPOT_ENTRE_N00_ET_N01 = 0.0;
-    private static final double TAUX_IMPOT_ENTRE_N01_ET_N02 = 0.11;
-    private static final double TAUX_IMPOT_ENTRE_N02_ET_N03 = 0.3;
-    private static final double TAUX_IMPOT_ENTRE_N03_ET_N04 = 0.41;
-    private static final double TAUX_IMPOT_ENTRE_N04_ET_N05 = 0.45;
-
-    private static final double[] TAUX_IMPOT = {
-    		TAUX_IMPOT_ENTRE_N00_ET_N01, 
-    		TAUX_IMPOT_ENTRE_N01_ET_N02, 
-    		TAUX_IMPOT_ENTRE_N02_ET_N03, 
-    		TAUX_IMPOT_ENTRE_N03_ET_N04, 
-    		TAUX_IMPOT_ENTRE_N04_ET_N05
-    };
-
-    
-    private static final int PALIER_MAXIMUM_POUR_ABATEMENT = 14171;
-    private static final int PALIER_MINIMUM_POUR_ABATEMENT = 495;
-    private static final double TAUX_ABATEMENT = 0.1;
-
-    private static final double PLAFOND_POUR_DEMI_PART = 1759;
-
-    private static final double SEUIL_DECOTE_DECLARANT_SEUL = 1929;
-    private static final double SEUIL_DECOTE_DECLARANT_COUPLE = 3191;
-
-    private static final double DECOTE_MAX_DECLARANT_SEUL = 873;
-    private static final double DECOTE_MAX_DECLARANT_COUPLE = 1444;
-    private static final double TAUX_DECOTE = 0.4525;
-
-    
     //Paramètre Client
     private int revenuNet = 0;
     private int nbEnfantTotal = 0;
@@ -147,86 +104,11 @@ public class SimulateurReusine implements ICalculateurImpot{
     	montantImpot = Math.round(montantImpot) - decote;
     	System.out.println("\n-----\n");
     }
+
     
-    private void calculAbatement() {
-        abatement = revenuNet * TAUX_ABATEMENT;
-        
-        System.out.println("L'abattement avant l'application des paliers est : " + abatement );
-       
-        if (abatement > PALIER_MAXIMUM_POUR_ABATEMENT) {
-            abatement = PALIER_MAXIMUM_POUR_ABATEMENT;
-        }
 
-        if (abatement < PALIER_MINIMUM_POUR_ABATEMENT) {
-            abatement = PALIER_MINIMUM_POUR_ABATEMENT;
-        }
-        
-        System.out.println("L'abattement après l'application des paliers est : " + abatement);
-
-        revenuFiscalReference = revenuNet - abatement;
-        
-        System.out.println("Le revenue fiscal de reference est : " + revenuFiscalReference);
-    }
     
-    private void calculParts() {
-    	//Partie des déclarants
-        switch ( situationFamiliale ) {
-            case CELIBATAIRE:
-            	nbPartsDeclarant = 1; break;
-            case MARIE:
-            	nbPartsDeclarant = 2; break;
-            case DIVORCE:
-            	nbPartsDeclarant = 1; break;
-            case VEUF:
-            	/*
-                if ( nbEnfantTotal == 0 ) {
-                	nbPartsDeclarant = 1;
-                } else {
-                	nbPartsDeclarant = 2;
-                }
-                */
-            	nbPartsDeclarant = 1; //Dans le code originel le if else est suivi de cette ligne le rendant inutile, je laisse le code car je ne sais pas si il fallait corrigée sachant que cela pour casser les test.
-                break;
-        }
-        
 
-        //Compte de base pour les enfants
-        if ( nbEnfantTotal <= 2 ) {
-        	nbParts = nbPartsDeclarant + nbEnfantTotal * 0.5;
-        } else if ( nbEnfantTotal > 2 ) { //Les part changes s'il y a plus de 2 enfants
-        	nbParts = nbPartsDeclarant +  1.0 + ( nbEnfantTotal - 2 );
-        }
-
-        //Ajout des part suplémentaire en cas de parent isolé avec enfant
-        if ( isParentIsole && nbEnfantTotal > 0) {
-            nbParts = nbParts + 0.5;
-        }
-
-        //Ajout des part suplémentaire pour chaque cas d'enfant handicapé
-        nbParts = nbParts + nbEnfantHandicape * 0.5;
-        System.out.print("Nombre de parts : " + nbParts);
-    }
-    
-    private void calculImpotDeclarantAvantDecote() {
-    	revenuImposable = revenuFiscalReference / nbPartsDeclarant ;
-
-    	montantImpotDeclarant = 0;
-
-        int i = 0;
-        do {
-            if ( revenuImposable >= PALIER_IMPOT[i] && revenuImposable < PALIER_IMPOT[i+1] ) {
-            	montantImpotDeclarant += ( revenuImposable - PALIER_IMPOT[i] ) * TAUX_IMPOT[i];
-                break;
-            } else {
-            	montantImpotDeclarant += ( PALIER_IMPOT[i+1] - PALIER_IMPOT[i] ) * TAUX_IMPOT[i];
-            }
-            i++;
-        } while( i < 5);
-
-        montantImpotDeclarant = montantImpotDeclarant * nbPartsDeclarant;
-        montantImpotDeclarant = Math.round( montantImpotDeclarant );
-        System.out.print("Impot declarant : " + montantImpotDeclarant);
-    }
     
     private void calculImpotTotalAvantDecote() {
         revenuImposable =  revenuFiscalReference / nbParts;

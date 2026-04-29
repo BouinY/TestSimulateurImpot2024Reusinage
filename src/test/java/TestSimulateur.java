@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import com.kerware.simulateur.AdaptateurCodeHerite;
 import com.kerware.simulateur.ICalculateurImpot;
-import com.kerware.simulateur.SimulateurReusine;
 import com.kerware.simulateur.SituationFamiliale;
+import com.kerware.simulateur.simulateurReusine.SimulateurReusine;
 
 
 public class TestSimulateur {
