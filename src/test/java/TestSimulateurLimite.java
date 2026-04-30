@@ -8,96 +8,94 @@ import com.kerware.simulateur.simulateurReusine.SimulateurReusine;
 
 public class TestSimulateurLimite {
 
-	/*
-    @Test
-    @DisplayName("Revenu à 0")
-    void testRevenuZero() {
-        SimulateurReusine sim = new SimulateurReusine();
+  /*
+   * @Test
+   * 
+   * @DisplayName("Revenu à 0") void testRevenuZero() { SimulateurReusine sim =
+   * new SimulateurReusine();
+   * 
+   * sim.setRevenusNet(0);
+   * sim.setSituationFamiliale(SituationFamiliale.CELIBATAIRE);
+   * sim.setNbEnfantsACharge(0); sim.setNbEnfantsSituationHandicap(0);
+   * sim.setParentIsole(false);
+   * 
+   * sim.calculImpotSurRevenuNet();
+   * 
+   * assertEquals(0, sim.getImpotSurRevenuNet()); }
+   */
 
-        sim.setRevenusNet(0);
-        sim.setSituationFamiliale(SituationFamiliale.CELIBATAIRE);
-        sim.setNbEnfantsACharge(0);
-        sim.setNbEnfantsSituationHandicap(0);
-        sim.setParentIsole(false);
+  @Test
+  @DisplayName("Passage tranche (11294€)")
+  void testLimiteTranche1() {
+    SimulateurReusine sim = new SimulateurReusine();
 
-        sim.calculImpotSurRevenuNet();
+    sim.setRevenusNet(11294);
+    sim.setSituationFamiliale(SituationFamiliale.CELIBATAIRE);
+    sim.setNbEnfantsACharge(0);
+    sim.setNbEnfantsSituationHandicap(0);
+    sim.setParentIsole(false);
 
-        assertEquals(0, sim.getImpotSurRevenuNet());
-    }
-    */
-	
-    @Test
-    @DisplayName("Passage tranche (11294€)")
-    void testLimiteTranche1() {
-        SimulateurReusine sim = new SimulateurReusine();
+    sim.calculImpotSurRevenuNet();
 
-        sim.setRevenusNet(11294);
-        sim.setSituationFamiliale(SituationFamiliale.CELIBATAIRE);
-        sim.setNbEnfantsACharge(0);
-        sim.setNbEnfantsSituationHandicap(0);
-        sim.setParentIsole(false);
+    assertEquals(0, sim.getImpotSurRevenuNet());
+  }
 
-        sim.calculImpotSurRevenuNet();
+  @Test
+  @DisplayName("Différence entre 2 et 3 enfants")
+  void testPassageDeuxATroisEnfants() {
+    SimulateurReusine sim1 = new SimulateurReusine();
+    SimulateurReusine sim2 = new SimulateurReusine();
 
-        assertEquals(0, sim.getImpotSurRevenuNet());
-    }
+    // 2 enfants
+    sim1.setRevenusNet(60000);
+    sim1.setSituationFamiliale(SituationFamiliale.MARIE);
+    sim1.setNbEnfantsACharge(2);
+    sim1.setNbEnfantsSituationHandicap(0);
+    sim1.setParentIsole(false);
+    sim1.calculImpotSurRevenuNet();
 
-    @Test
-    @DisplayName("Différence entre 2 et 3 enfants")
-    void testPassageDeuxATroisEnfants() {
-        SimulateurReusine sim1 = new SimulateurReusine();
-        SimulateurReusine sim2 = new SimulateurReusine();
+    // 3 enfants
+    sim2.setRevenusNet(60000);
+    sim2.setSituationFamiliale(SituationFamiliale.MARIE);
+    sim2.setNbEnfantsACharge(3);
+    sim2.setNbEnfantsSituationHandicap(0);
+    sim2.setParentIsole(false);
+    sim2.calculImpotSurRevenuNet();
 
-        // 2 enfants
-        sim1.setRevenusNet(60000);
-        sim1.setSituationFamiliale(SituationFamiliale.MARIE);
-        sim1.setNbEnfantsACharge(2);
-        sim1.setNbEnfantsSituationHandicap(0);
-        sim1.setParentIsole(false);
-        sim1.calculImpotSurRevenuNet();
+    // Vérifie que ça change
+    assertEquals(false, sim1.getNbPartsFoyerFiscal() == sim2.getNbPartsFoyerFiscal());
+  }
 
-        // 3 enfants
-        sim2.setRevenusNet(60000);
-        sim2.setSituationFamiliale(SituationFamiliale.MARIE);
-        sim2.setNbEnfantsACharge(3);
-        sim2.setNbEnfantsSituationHandicap(0);
-        sim2.setParentIsole(false);
-        sim2.calculImpotSurRevenuNet();
+  @Test
+  @DisplayName("Activation décote")
+  void testActivationDecote() {
+    SimulateurReusine sim = new SimulateurReusine();
 
-        // Vérifie que ça change
-        assertEquals(false, sim1.getNbPartsFoyerFiscal() == sim2.getNbPartsFoyerFiscal());
-    }
+    sim.setRevenusNet(15000);
+    sim.setSituationFamiliale(SituationFamiliale.CELIBATAIRE);
+    sim.setNbEnfantsACharge(0);
+    sim.setNbEnfantsSituationHandicap(0);
+    sim.setParentIsole(false);
 
-    @Test
-    @DisplayName("Activation décote")
-    void testActivationDecote() {
-        SimulateurReusine sim = new SimulateurReusine();
+    sim.calculImpotSurRevenuNet();
 
-        sim.setRevenusNet(15000);
-        sim.setSituationFamiliale(SituationFamiliale.CELIBATAIRE);
-        sim.setNbEnfantsACharge(0);
-        sim.setNbEnfantsSituationHandicap(0);
-        sim.setParentIsole(false);
+    // décote doit être > 0
+    assertEquals(true, sim.getDecote() > 0);
+  }
 
-        sim.calculImpotSurRevenuNet();
+  @Test
+  @DisplayName("Parent isolé avec 1 enfant")
+  void testParentIsole() {
+    SimulateurReusine sim = new SimulateurReusine();
 
-        // décote doit être > 0
-        assertEquals(true, sim.getDecote() > 0);
-    }
+    sim.setRevenusNet(30000);
+    sim.setSituationFamiliale(SituationFamiliale.DIVORCE);
+    sim.setNbEnfantsACharge(1);
+    sim.setNbEnfantsSituationHandicap(0);
+    sim.setParentIsole(true);
 
-    @Test
-    @DisplayName("Parent isolé avec 1 enfant")
-    void testParentIsole() {
-        SimulateurReusine sim = new SimulateurReusine();
+    sim.calculImpotSurRevenuNet();
 
-        sim.setRevenusNet(30000);
-        sim.setSituationFamiliale(SituationFamiliale.DIVORCE);
-        sim.setNbEnfantsACharge(1);
-        sim.setNbEnfantsSituationHandicap(0);
-        sim.setParentIsole(true);
-
-        sim.calculImpotSurRevenuNet();
-
-        assertEquals(2.0, sim.getNbPartsFoyerFiscal());
-    }
+    assertEquals(2.0, sim.getNbPartsFoyerFiscal());
+  }
 }

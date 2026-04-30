@@ -8,55 +8,55 @@ import com.kerware.simulateur.simulateurReusine.SimulateurReusine;
 
 public class TestSimulateurException {
 
-    @Test
-    @DisplayName("Exception si revenu négatif")
-    void testRevenuNegatif() {
-        SimulateurReusine sim = new SimulateurReusine();
+  @Test
+  @DisplayName("Exception si revenu négatif")
+  void testRevenuNegatif() {
+    SimulateurReusine sim = new SimulateurReusine();
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            sim.setRevenusNet(-1000);
-        });
-    }
+    assertThrows(IllegalArgumentException.class, () -> {
+      sim.setRevenusNet(-1000);
+    });
+  }
 
-    @Test
-    @DisplayName("Exception si nombre d'enfants négatif")
-    void testNbEnfantsNegatif() {
-        SimulateurReusine sim = new SimulateurReusine();
+  @Test
+  @DisplayName("Exception si nombre d'enfants négatif")
+  void testNbEnfantsNegatif() {
+    SimulateurReusine sim = new SimulateurReusine();
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            sim.setNbEnfantsACharge(-1);
-        });
-    }
+    assertThrows(IllegalArgumentException.class, () -> {
+      sim.setNbEnfantsACharge(-1);
+    });
+  }
 
-    @Test
-    @DisplayName("Exception si enfants handicapés négatif")
-    void testNbEnfantsHandicapesNegatif() {
-        SimulateurReusine sim = new SimulateurReusine();
+  @Test
+  @DisplayName("Exception si enfants handicapés négatif")
+  void testNbEnfantsHandicapesNegatif() {
+    SimulateurReusine sim = new SimulateurReusine();
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            sim.setNbEnfantsSituationHandicap(-2);
-        });
-    }
+    assertThrows(IllegalArgumentException.class, () -> {
+      sim.setNbEnfantsSituationHandicap(-2);
+    });
+  }
 
-    @Test
-    @DisplayName("Exception si enfants handicapés > enfants totaux")
-    void testNbEnfantsHandicapesSuperieur() {
-        SimulateurReusine sim = new SimulateurReusine();
+  @Test
+  @DisplayName("Exception si enfants handicapés > enfants totaux")
+  void testNbEnfantsHandicapesSuperieur() {
+    SimulateurReusine sim = new SimulateurReusine();
 
-        sim.setNbEnfantsACharge(1);
+    sim.setNbEnfantsACharge(1);
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            sim.setNbEnfantsSituationHandicap(2);
-        });
-    }
+    assertThrows(IllegalArgumentException.class, () -> {
+      sim.setNbEnfantsSituationHandicap(2);
+    });
+  }
 
-    @Test
-    @DisplayName("Exception si situation familiale null")
-    void testSituationFamilialeNull() {
-        SimulateurReusine sim = new SimulateurReusine();
+  @Test
+  @DisplayName("Exception si situation familiale null")
+  void testSituationFamilialeNull() {
+    SimulateurReusine sim = new SimulateurReusine();
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            sim.setSituationFamiliale(null);
-        });
-    }
+    assertThrows(IllegalArgumentException.class, () -> {
+      sim.setSituationFamiliale(null);
+    });
+  }
 }
