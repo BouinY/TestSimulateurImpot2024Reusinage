@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>SimulateurReusine.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">(default package) (30 avr. 2026 22:26:10)</a> &gt; <a href="../../index.html" class="el_group">SimulateurImpot2024</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.kerware.simulateur.simulateurReusine</a> &gt; <span class="el_source">SimulateurReusine.java</span></div><h1>SimulateurReusine.java</h1><pre class="source lang-java linenums">package com.kerware.simulateur.simulateurReusine;
+
+import java.util.ArrayList;
+
+import com.kerware.simulateur.ICalculateurImpot;
+import com.kerware.simulateur.SituationFamiliale;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurAbatement;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurDecote;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurImpotAvantDecote;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurImpotDeclarant;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurParts;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurPartsDeclarant;
+import com.kerware.simulateur.simulateurReusine.Calculateur.CalculateurPlafond;
+
+<span class="fc" id="L15">public class SimulateurReusine implements ICalculateurImpot{</span>
+	
+    //Paramètre Client
+<span class="fc" id="L18">    private int revenuNet = 0;</span>
+<span class="fc" id="L19">    private int nbEnfantTotal = 0;</span>
+<span class="fc" id="L20">    private int nbEnfantHandicape = 0;</span>
+<span class="fc" id="L21">    private boolean isParentIsole = false;</span>
+<span class="fc" id="L22">    private SituationFamiliale situationFamiliale = SituationFamiliale.CELIBATAIRE;</span>
+    
+    //Donnée Client 
+    
+<span class="fc" id="L26">    private double revenuFiscalReference = 0;</span>
+<span class="fc" id="L27">    private double revenuImposable = 0;</span>
+
+<span class="fc" id="L29">    private double abatement = 0;</span>
+
+<span class="fc" id="L31">    private double nbPartsDeclarant = 0;</span>
+<span class="fc" id="L32">    private double nbParts = 0;</span>
+<span class="fc" id="L33">    private double decote = 0;</span>
+
+<span class="fc" id="L35">    private double montantImpotDeclarant = 0;</span>
+<span class="fc" id="L36">    private double montantImpot = 0;</span>
+
+    
+    //Fonction de Paramètrage
+    @Override
+    public void setRevenusNet(int revenuNet) {
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (revenuNet &lt; 0) {</span>
+<span class="fc" id="L43">            throw new IllegalArgumentException(&quot;Le revenu net ne peut pas être négatif&quot;);</span>
+        }
+<span class="fc" id="L45">        this.revenuNet = revenuNet;</span>
+<span class="fc" id="L46">    }</span>
+    
+    @Override
+    public void setSituationFamiliale(SituationFamiliale situationFamiliale) {
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (situationFamiliale == null) {</span>
+<span class="fc" id="L51">            throw new IllegalArgumentException(&quot;La situation familiale ne peut pas être nulle&quot;);</span>
+        }
+<span class="fc" id="L53">    	this.situationFamiliale = situationFamiliale;</span>
+<span class="fc" id="L54">    }</span>
+
+    @Override
+    public void setNbEnfantsACharge(int nbEnfant) {
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (nbEnfant &lt; 0) {</span>
+<span class="fc" id="L59">            throw new IllegalArgumentException(&quot;Le nombre d'enfants ne peut pas être négatif&quot;);</span>
+        }
+        
+<span class="fc" id="L62">    	this.nbEnfantTotal = nbEnfant;</span>
+<span class="fc" id="L63">    }</span>
+
+    @Override
+    public void setNbEnfantsSituationHandicap(int nbEnfantHandicape) {
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (nbEnfantHandicape &lt; 0) {</span>
+<span class="fc" id="L68">            throw new IllegalArgumentException(&quot;Le nombre d'enfants avec handicap ne peut pas être négatif&quot;);</span>
+        }
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (nbEnfantHandicape &gt; this.nbEnfantTotal) {</span>
+<span class="fc" id="L71">            throw new IllegalArgumentException(&quot;Le nombre d'enfants avec handicap ne peut pas dépasser le nombre total d'enfants&quot;);</span>
+        }
+    	    
+<span class="fc" id="L74">    	this.nbEnfantHandicape = nbEnfantHandicape;</span>
+<span class="fc" id="L75">    }</span>
+
+    @Override
+    public void setParentIsole(boolean isParentIsole) {
+<span class="fc" id="L79">    	this.isParentIsole = isParentIsole;</span>
+<span class="fc" id="L80">    }</span>
+    
+   
+    //Fonction d'acquisition d'information
+    @Override
+    public int getRevenuFiscalReference() {
+<span class="nc" id="L86">        return (int) Math.round(revenuFiscalReference);   </span>
+    }
+
+    @Override
+    public int getAbattement() {
+<span class="nc" id="L91">        return (int) Math.round(abatement);</span>
+    }
+
+    @Override
+    public double getNbPartsFoyerFiscal() {
+<span class="fc" id="L96">        return nbParts;</span>
+    }
+
+    @Override
+    public int getImpotAvantDecote() {
+<span class="nc" id="L101">        return getImpotSurRevenuNet() + getDecote();</span>
+    }
+
+    @Override
+    public int getDecote() {
+<span class="fc" id="L106">        return (int) Math.round(decote);</span>
+    }
+
+    @Override
+    public int getImpotSurRevenuNet() {
+<span class="fc" id="L111">        return (int) Math.round(montantImpot);</span>
+    }
+          
+    
+    //Fonction de calcul    
+    @Override
+    public void calculImpotSurRevenuNet() {
+<span class="fc" id="L118">        System.out.println(&quot;Paramètre de calcul : \n&quot;</span>
+<span class="fc" id="L119">        		+ &quot;Revenu Net : &quot; + revenuNet + &quot;\n&quot; + &quot;Enfant Total : &quot; + nbEnfantTotal + &quot;\n&quot; </span>
+<span class="fc" id="L120">        		+ &quot;Enfant Handicapé : &quot; + nbEnfantHandicape + &quot;\n&quot; + &quot;Est un parent isolé : &quot; + isParentIsole + &quot;\n&quot;</span>
+<span class="fc" id="L121">        		+ &quot;Situation familiale : &quot; + situationFamiliale + &quot;\n&quot;);</span>
+    	
+<span class="fc" id="L123">        abatement = CalculateurAbatement.calcul(revenuNet);</span>
+<span class="fc" id="L124">        revenuFiscalReference = revenuNet - abatement;</span>
+
+<span class="fc" id="L126">        nbPartsDeclarant = CalculateurPartsDeclarant.calcul(situationFamiliale);</span>
+<span class="fc" id="L127">        nbParts = CalculateurParts.calcul(nbPartsDeclarant, nbEnfantTotal, nbEnfantHandicape, isParentIsole);</span>
+        
+<span class="fc" id="L129">        montantImpotDeclarant = CalculateurImpotDeclarant.calcul(revenuFiscalReference, nbPartsDeclarant);</span>
+<span class="fc" id="L130">        montantImpot = CalculateurImpotAvantDecote.calcul(revenuFiscalReference, nbParts);</span>
+    	
+<span class="fc" id="L132">        montantImpot = CalculateurPlafond.calcul(montantImpotDeclarant, montantImpot, nbParts, nbPartsDeclarant);</span>
+<span class="fc" id="L133">        decote = CalculateurDecote.calcul(montantImpot, nbPartsDeclarant);</span>
+    	
+<span class="fc" id="L135">    	montantImpot = Math.round(montantImpot) - decote;</span>
+<span class="fc" id="L136">    	System.out.println(&quot;\n-----\n&quot;);</span>
+<span class="fc" id="L137">    }</span>
+
+
+    
+
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>(default package) (30 avr. 2026 22:26:10)</div></body></html>

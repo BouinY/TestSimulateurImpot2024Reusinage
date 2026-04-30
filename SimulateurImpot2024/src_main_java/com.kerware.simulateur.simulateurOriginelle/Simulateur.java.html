@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>Simulateur.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">(default package) (30 avr. 2026 22:26:10)</a> &gt; <a href="../../index.html" class="el_group">SimulateurImpot2024</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.kerware.simulateur.simulateurOriginelle</a> &gt; <span class="el_source">Simulateur.java</span></div><h1>Simulateur.java</h1><pre class="source lang-java linenums">package com.kerware.simulateur.simulateurOriginelle;
+
+import com.kerware.simulateur.SituationFamiliale;
+
+/**
+ *  Cette classe permet de simuler le calcul de l'impôt sur le revenu
+ *  en France pour l'année 2024 sur les revenus de l'année 2023 pour
+ *  des cas simples de contribuables célibataires, mariés, divorcés, veufs
+ *  ou pacsés avec ou sans enfants à charge ou enfants en situation de handicap
+ *  et parent isolé.
+ *
+ *  EXEMPLE DE CODE DE TRES MAUVAISE QUALITE FAIT PAR UN DEBUTANT
+ *
+ *  Pas de lisibilité, pas de commentaires, pas de tests
+ *  Pas de documentation, pas de gestion des erreurs
+ *  Pas de logique métier, pas de modularité
+ *  Pas de gestion des exceptions, pas de gestion des logs
+ *  Principe &quot;Single Responsability&quot; non respecté
+ *  Pas de traçabilité vers les exigences métier
+ *
+ *  Pourtant ce code fonctionne correctement
+ *  Il s'agit d'un &quot;legacy&quot; code qui est difficile à maintenir
+ *  L'auteur n'a pas fourni de tests unitaires
+ **/
+
+<span class="nc" id="L26">public class Simulateur {</span>
+
+
+
+<span class="nc" id="L30">    private int l00 = 0 ;</span>
+<span class="nc" id="L31">    private int l01 = 11294;</span>
+<span class="nc" id="L32">    private int l02 = 28797;</span>
+<span class="nc" id="L33">    private int l03 = 82341;</span>
+<span class="nc" id="L34">    private int l04 = 177106;</span>
+<span class="nc" id="L35">    private int l05 = Integer.MAX_VALUE;</span>
+
+<span class="nc" id="L37">    private int[] limites = new int[6];</span>
+
+<span class="nc" id="L39">    private double t00 = 0.0;</span>
+<span class="nc" id="L40">    private double t01 = 0.11;</span>
+<span class="nc" id="L41">    private double t02 = 0.3;</span>
+<span class="nc" id="L42">    private double t03 = 0.41;</span>
+<span class="nc" id="L43">    private double t04 = 0.45;</span>
+
+<span class="nc" id="L45">    private double[] taux = new double[5];</span>
+
+<span class="nc" id="L47">    private  int lAbtMax = 14171;</span>
+<span class="nc" id="L48">    private  int lAbtMin = 495;</span>
+<span class="nc" id="L49">    private double tAbt = 0.1;</span>
+
+<span class="nc" id="L51">    private double plafDemiPart = 1759;</span>
+
+<span class="nc" id="L53">    private double seuilDecoteDeclarantSeul = 1929;</span>
+<span class="nc" id="L54">    private double seuilDecoteDeclarantCouple    = 3191;</span>
+
+<span class="nc" id="L56">    private double decoteMaxDeclarantSeul = 873;</span>
+<span class="nc" id="L57">    private double decoteMaxDeclarantCouple = 1444;</span>
+<span class="nc" id="L58">    private double tauxDecote = 0.4525;</span>
+
+<span class="nc" id="L60">    private int rNet = 0; //Revenue NET</span>
+<span class="nc" id="L61">    private int nbEnf = 0;</span>
+<span class="nc" id="L62">    private int nbEnfH = 0;</span>
+
+<span class="nc" id="L64">    private double rFRef = 0;</span>
+<span class="nc" id="L65">    private double rImposable = 0;</span>
+
+<span class="nc" id="L67">    private double abt = 0;</span>
+
+<span class="nc" id="L69">    private double nbPtsDecl = 0;</span>
+<span class="nc" id="L70">    private double nbPts = 0;</span>
+<span class="nc" id="L71">    private double decote = 0;</span>
+
+<span class="nc" id="L73">    private double mImpDecl = 0;</span>
+<span class="nc" id="L74">    private double mImp = 0;</span>
+
+<span class="nc" id="L76">    private boolean parIso = false;</span>
+    
+    //Variable rajouté par Yohan BOUIN LE 20/02/2026
+    private SituationFamiliale sitFam;
+
+
+    // Fonction de calcul de l'impôt sur le revenu net en France en 2024 sur les revenu 2023
+
+    public long calculImpot( int revNet, SituationFamiliale sitFam, int nbEnfants, int nbEnfantsHandicapes, boolean parentIsol) {
+
+<span class="nc" id="L86">        rNet = revNet;</span>
+
+<span class="nc" id="L88">        nbEnf = nbEnfants;</span>
+<span class="nc" id="L89">        nbEnfH = nbEnfantsHandicapes;</span>
+<span class="nc" id="L90">        parIso = parentIsol;</span>
+
+<span class="nc" id="L92">        limites[0] = l00;</span>
+<span class="nc" id="L93">        limites[1] = l01;</span>
+<span class="nc" id="L94">        limites[2] = l02;</span>
+<span class="nc" id="L95">        limites[3] = l03;</span>
+<span class="nc" id="L96">        limites[4] = l04;</span>
+<span class="nc" id="L97">        limites[5] = l05;</span>
+
+<span class="nc" id="L99">        taux[0] = t00;</span>
+<span class="nc" id="L100">        taux[1] = t01;</span>
+<span class="nc" id="L101">        taux[2] = t02;</span>
+<span class="nc" id="L102">        taux[3] = t03;</span>
+<span class="nc" id="L103">        taux[4] = t04;</span>
+
+        // Abattement
+
+<span class="nc" id="L107">        abt = rNet * tAbt;</span>
+
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        if (abt &gt; lAbtMax) {</span>
+<span class="nc" id="L110">            abt = lAbtMax;</span>
+        }
+
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (abt &lt; lAbtMin) {</span>
+<span class="nc" id="L114">            abt = lAbtMin;</span>
+        }
+
+
+<span class="nc" id="L118">        rFRef = rNet - abt;</span>
+
+        // parts déclarants
+<span class="nc bnc" id="L121" title="All 5 branches missed.">        switch ( sitFam ) {</span>
+            case CELIBATAIRE:
+<span class="nc" id="L123">                nbPtsDecl = 1;</span>
+<span class="nc" id="L124">                break;</span>
+            case MARIE:
+<span class="nc" id="L126">                nbPtsDecl = 2;</span>
+<span class="nc" id="L127">                break;</span>
+            case DIVORCE:
+<span class="nc" id="L129">                nbPtsDecl = 1;</span>
+<span class="nc" id="L130">                break;</span>
+            case VEUF:
+<span class="nc bnc" id="L132" title="All 2 branches missed.">                if ( nbEnf == 0 ) {</span>
+<span class="nc" id="L133">                    nbPtsDecl = 1;</span>
+<span class="nc" id="L134">                } else {</span>
+<span class="nc" id="L135">                    nbPtsDecl = 2;</span>
+                }
+<span class="nc" id="L137">                nbPtsDecl = 1;</span>
+                break;
+        }
+
+        // parts enfants à charge
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if ( nbEnf &lt;= 2 ) {</span>
+<span class="nc" id="L143">            nbPts = nbPtsDecl + nbEnf * 0.5;</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        } else if ( nbEnf &gt; 2 ) {</span>
+<span class="nc" id="L145">            nbPts = nbPtsDecl+  1.0 + ( nbEnf - 2 );</span>
+        }
+
+        // parent isolé
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        if ( parIso ) {</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if ( nbEnf &gt; 0 ){</span>
+<span class="nc" id="L151">                nbPts = nbPts + 0.5;</span>
+            }
+        }
+
+        // enfant handicapé
+<span class="nc" id="L156">        nbPts = nbPts + nbEnfH * 0.5;</span>
+
+        // impôt des declarants
+<span class="nc" id="L159">        rImposable = rFRef / nbPtsDecl ;</span>
+
+<span class="nc" id="L161">        mImpDecl = 0;</span>
+
+<span class="nc" id="L163">        int i = 0;</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">        do {</span>
+<span class="nc bnc" id="L165" title="All 4 branches missed.">            if ( rImposable &gt;= limites[i] &amp;&amp; rImposable &lt; limites[i+1] ) {</span>
+<span class="nc" id="L166">                mImpDecl += ( rImposable - limites[i] ) * taux[i];</span>
+<span class="nc" id="L167">                break;</span>
+            } else {
+<span class="nc" id="L169">                mImpDecl += ( limites[i+1] - limites[i] ) * taux[i];</span>
+            }
+<span class="nc" id="L171">            i++;</span>
+<span class="nc" id="L172">        } while( i &lt; 5);</span>
+
+<span class="nc" id="L174">        mImpDecl = mImpDecl * nbPtsDecl;</span>
+<span class="nc" id="L175">        mImpDecl = Math.round( mImpDecl );</span>
+
+        // impôt foyer fiscal complet
+<span class="nc" id="L178">        rImposable =  rFRef / nbPts;</span>
+<span class="nc" id="L179">        mImp = 0;</span>
+<span class="nc" id="L180">        i = 0;</span>
+
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        do {</span>
+<span class="nc bnc" id="L183" title="All 4 branches missed.">            if ( rImposable &gt;= limites[i] &amp;&amp; rImposable &lt; limites[i+1] ) {</span>
+<span class="nc" id="L184">                mImp += ( rImposable - limites[i] ) * taux[i];</span>
+<span class="nc" id="L185">                break;</span>
+            } else {
+<span class="nc" id="L187">                mImp += ( limites[i+1] - limites[i] ) * taux[i];</span>
+            }
+<span class="nc" id="L189">            i++;</span>
+<span class="nc" id="L190">        } while( i &lt; 5);</span>
+
+<span class="nc" id="L192">        mImp = mImp * nbPts;</span>
+<span class="nc" id="L193">        mImp = Math.round( mImp );</span>
+
+        // baisse impot
+<span class="nc" id="L196">        double baisseImpot = mImpDecl - mImp;</span>
+
+        // dépassement plafond
+<span class="nc" id="L199">        double ecartPts = nbPts - nbPtsDecl;</span>
+
+<span class="nc" id="L201">        double plafond = (ecartPts / 0.5) * plafDemiPart;</span>
+
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if ( baisseImpot &gt;= plafond ) {</span>
+<span class="nc" id="L204">            mImp = mImpDecl - plafond;</span>
+        }
+
+<span class="nc" id="L207">        decote = 0;</span>
+        // decote
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        if ( nbPtsDecl == 1 ) {</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">            if ( mImp &lt; seuilDecoteDeclarantSeul ) {</span>
+<span class="nc" id="L211">                 decote = decoteMaxDeclarantSeul - ( mImp  * tauxDecote );</span>
+            }
+        }
+<span class="nc bnc" id="L214" title="All 2 branches missed.">        if (  nbPtsDecl == 2 ) {</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">            if ( mImp &lt; seuilDecoteDeclarantCouple ) {</span>
+<span class="nc" id="L216">                 decote =  decoteMaxDeclarantCouple - ( mImp  * tauxDecote  );</span>
+            }
+        }
+<span class="nc" id="L219">        decote = Math.round( decote );</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">        if ( mImp &lt;= decote ) {</span>
+<span class="nc" id="L221">            decote = mImp;</span>
+        }
+
+<span class="nc" id="L224">        mImp = Math.round(mImp) - decote;</span>
+
+<span class="nc" id="L226">        return (long) mImp;</span>
+    }
+
+    public static void main(String[] args) {
+<span class="nc" id="L230">        Simulateur simulateur = new Simulateur();</span>
+<span class="nc" id="L231">        long impot = simulateur.calculImpot(65000, SituationFamiliale.MARIE, 3, 0, false);</span>
+<span class="nc" id="L232">        System.out.println(&quot;Impot sur le revenu net : &quot; + impot);</span>
+<span class="nc" id="L233">        impot = simulateur.calculImpot(65000, SituationFamiliale.MARIE, 3, 1, false);</span>
+<span class="nc" id="L234">        System.out.println(&quot;Impot sur le revenu net : &quot; + impot);</span>
+<span class="nc" id="L235">        impot = simulateur.calculImpot(35000, SituationFamiliale.DIVORCE, 1, 0, true);</span>
+<span class="nc" id="L236">        System.out.println(&quot;Impot sur le revenu net : &quot; + impot);</span>
+<span class="nc" id="L237">        impot = simulateur.calculImpot(35000, SituationFamiliale.DIVORCE, 2, 0, true);</span>
+<span class="nc" id="L238">        System.out.println(&quot;Impot sur le revenu net : &quot; + impot);</span>
+<span class="nc" id="L239">        impot = simulateur.calculImpot(50000, SituationFamiliale.DIVORCE, 3, 0, true);</span>
+<span class="nc" id="L240">        System.out.println(&quot;Impot sur le revenu net : &quot; + impot);</span>
+<span class="nc" id="L241">        impot = simulateur.calculImpot(50000, SituationFamiliale.DIVORCE, 3, 1, true);</span>
+<span class="nc" id="L242">        System.out.println(&quot;Impot sur le revenu net : &quot; + impot);</span>
+<span class="nc" id="L243">        impot = simulateur.calculImpot(200000, SituationFamiliale.CELIBATAIRE, 0, 0, true);</span>
+<span class="nc" id="L244">        System.out.println(&quot;Impot sur le revenu net : &quot; + impot);</span>
+
+<span class="nc" id="L246">    }</span>
+
+    //Setter rajouté par Yohan BOUIN LE 13/02/2026
+    public void setRevenusNet(int revenuNet) {
+<span class="nc" id="L250">        rNet = revenuNet;</span>
+<span class="nc" id="L251">    }</span>
+
+    //Setter rajouté par Yohan BOUIN LE 20/02/2026
+	public void setSituationFamiliale(SituationFamiliale sf) {
+<span class="nc" id="L255">		sitFam = sf;		</span>
+<span class="nc" id="L256">	}</span>
+    
+    //Setter rajouté par Yohan BOUIN LE 20/02/2026
+	public void setNbEnfantsACharge(int nbe) {
+<span class="nc" id="L260">		nbEnf = nbe;		</span>
+<span class="nc" id="L261">	}</span>
+	
+    //Setter rajouté par Yohan BOUIN LE 20/02/2026
+	public void setNbEnfantsSituationHandicap(int nbesh) {
+<span class="nc" id="L265">		nbEnfH = nbesh;</span>
+<span class="nc" id="L266">	}</span>
+
+    //Setter rajouté par Yohan BOUIN LE 20/02/2026
+	public void setParentIsole(boolean pi) {
+<span class="nc" id="L270">		parIso	= pi;</span>
+<span class="nc" id="L271">	}</span>
+
+	//Fonction rajouté par Yohan BOUIN LE 20/02/2026
+	public void calculImpotSurRevenuNet() {
+<span class="nc" id="L275">		mImp = calculImpot(rNet, sitFam, nbEnf, nbEnfH, parIso);</span>
+<span class="nc" id="L276">	}</span>
+
+	//Getter rajouté par Yohan BOUIN LE 20/02/2026
+	public int getRevenuFiscalReference() {
+<span class="nc" id="L280">		return (int) Math.round(rFRef);</span>
+	}
+	
+	//Getter rajouté par Yohan BOUIN LE 20/02/2026
+	public int getAbattement() {
+<span class="nc" id="L285">		return (int)  Math.round(abt);</span>
+	}
+
+	//Getter rajouté par Yohan BOUIN LE 20/02/2026
+	public double getNbPartsFoyerFiscal() {
+<span class="nc" id="L290">		return nbPts;</span>
+	}
+
+	//Getter rajouté par Yohan BOUIN LE 20/02/2026
+	public int getDecote() {
+<span class="nc" id="L295">		return  (int) Math.round(decote);</span>
+	}
+
+	//Getter rajouté par Yohan BOUIN LE 20/02/2026
+	public int getImpotSurRevenuNet() {
+<span class="nc" id="L300">		return (int) this.mImp;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>(default package) (30 avr. 2026 22:26:10)</div></body></html>

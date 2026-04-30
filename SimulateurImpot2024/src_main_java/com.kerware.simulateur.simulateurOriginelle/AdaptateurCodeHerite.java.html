@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>AdaptateurCodeHerite.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">(default package) (30 avr. 2026 22:26:10)</a> &gt; <a href="../../index.html" class="el_group">SimulateurImpot2024</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.kerware.simulateur.simulateurOriginelle</a> &gt; <span class="el_source">AdaptateurCodeHerite.java</span></div><h1>AdaptateurCodeHerite.java</h1><pre class="source lang-java linenums">package com.kerware.simulateur.simulateurOriginelle;
+
+import com.kerware.simulateur.ICalculateurImpot;
+import com.kerware.simulateur.SituationFamiliale;
+
+<span class="nc" id="L6">public class AdaptateurCodeHerite implements ICalculateurImpot{</span>
+
+<span class="nc" id="L8">    Simulateur simulateurHerite = new Simulateur();</span>
+    @Override
+    public void setRevenusNet(int rn) {
+<span class="nc" id="L11">        simulateurHerite.setRevenusNet(rn);</span>
+<span class="nc" id="L12">    }</span>
+
+    @Override
+    public void setSituationFamiliale(SituationFamiliale sf) {
+<span class="nc" id="L16">    	simulateurHerite.setSituationFamiliale(sf);</span>
+<span class="nc" id="L17">    }</span>
+
+    @Override
+    public void setNbEnfantsACharge(int nbe) {
+<span class="nc" id="L21">    	simulateurHerite.setNbEnfantsACharge(nbe);</span>
+<span class="nc" id="L22">    }</span>
+
+    @Override
+    public void setNbEnfantsSituationHandicap(int nbesh) {
+<span class="nc" id="L26">    	simulateurHerite.setNbEnfantsSituationHandicap(nbesh);</span>
+<span class="nc" id="L27">    }</span>
+
+    @Override
+    public void setParentIsole(boolean pi) {
+<span class="nc" id="L31">    	simulateurHerite.setParentIsole(pi);</span>
+<span class="nc" id="L32">    }</span>
+
+    @Override
+    public void calculImpotSurRevenuNet() {
+<span class="nc" id="L36">    	simulateurHerite.calculImpotSurRevenuNet();</span>
+<span class="nc" id="L37">    }</span>
+
+    @Override
+    public int getRevenuFiscalReference() {
+<span class="nc" id="L41">        return simulateurHerite.getRevenuFiscalReference();</span>
+    }
+
+    @Override
+    public int getAbattement() {
+<span class="nc" id="L46">        return simulateurHerite.getAbattement();</span>
+    }
+
+    @Override
+    public double getNbPartsFoyerFiscal() {
+<span class="nc" id="L51">        return simulateurHerite.getNbPartsFoyerFiscal();</span>
+    }
+
+    @Override
+    public int getImpotAvantDecote() {
+<span class="nc" id="L56">        return simulateurHerite.getImpotSurRevenuNet() + simulateurHerite.getDecote();</span>
+    }
+
+    @Override
+    public int getDecote() {
+<span class="nc" id="L61">        return simulateurHerite.getDecote();</span>
+    }
+
+    @Override
+    public int getImpotSurRevenuNet() {
+<span class="nc" id="L66">        return simulateurHerite.getImpotSurRevenuNet();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>(default package) (30 avr. 2026 22:26:10)</div></body></html>

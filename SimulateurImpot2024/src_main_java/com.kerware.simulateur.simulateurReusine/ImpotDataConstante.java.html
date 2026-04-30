@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>ImpotDataConstante.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">(default package) (30 avr. 2026 22:26:10)</a> &gt; <a href="../../index.html" class="el_group">SimulateurImpot2024</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.kerware.simulateur.simulateurReusine</a> &gt; <span class="el_source">ImpotDataConstante.java</span></div><h1>ImpotDataConstante.java</h1><pre class="source lang-java linenums">package com.kerware.simulateur.simulateurReusine;
+
+public interface ImpotDataConstante {
+    public static final int PALIER_IMPOT_N00 = 0 ;
+    public static final int PALIER_IMPOT_N01 = 11294;
+    public static final int PALIER_IMPOT_N02 = 28797;
+    public static final int PALIER_IMPOT_N03 = 82341;
+    public static final int PALIER_IMPOT_N04 = 177106;
+    public static final int PALIER_IMPOT_N05 = Integer.MAX_VALUE;
+
+<span class="fc" id="L11">    public static final int[] PALIER_IMPOT = {</span>
+    	    PALIER_IMPOT_N00, 
+<span class="fc" id="L13">    	    PALIER_IMPOT_N01, </span>
+<span class="fc" id="L14">    	    PALIER_IMPOT_N02, </span>
+<span class="fc" id="L15">    	    PALIER_IMPOT_N03, </span>
+<span class="fc" id="L16">    	    PALIER_IMPOT_N04, </span>
+<span class="fc" id="L17">    	    PALIER_IMPOT_N05</span>
+    	};
+
+    
+    public static final double TAUX_IMPOT_ENTRE_N00_ET_N01 = 0.0;
+    public static final double TAUX_IMPOT_ENTRE_N01_ET_N02 = 0.11;
+    public static final double TAUX_IMPOT_ENTRE_N02_ET_N03 = 0.3;
+    public static final double TAUX_IMPOT_ENTRE_N03_ET_N04 = 0.41;
+    public static final double TAUX_IMPOT_ENTRE_N04_ET_N05 = 0.45;
+
+<span class="fc" id="L27">    public static final double[] TAUX_IMPOT = {</span>
+<span class="fc" id="L28">    		TAUX_IMPOT_ENTRE_N00_ET_N01, </span>
+<span class="fc" id="L29">    		TAUX_IMPOT_ENTRE_N01_ET_N02, </span>
+<span class="fc" id="L30">    		TAUX_IMPOT_ENTRE_N02_ET_N03, </span>
+<span class="fc" id="L31">    		TAUX_IMPOT_ENTRE_N03_ET_N04, </span>
+<span class="fc" id="L32">    		TAUX_IMPOT_ENTRE_N04_ET_N05</span>
+    };
+
+    
+    public static final int PALIER_MAXIMUM_POUR_ABATEMENT = 14171;
+    public static final int PALIER_MINIMUM_POUR_ABATEMENT = 495;
+    public static final double TAUX_ABATEMENT = 0.1;
+
+    public static final double PLAFOND_POUR_DEMI_PART = 1759;
+
+    public static final double SEUIL_DECOTE_DECLARANT_SEUL = 1929;
+    public static final double SEUIL_DECOTE_DECLARANT_COUPLE = 3191;
+
+    public static final double DECOTE_MAX_DECLARANT_SEUL = 873;
+    public static final double DECOTE_MAX_DECLARANT_COUPLE = 1444;
+<span class="fc" id="L47">    public static final double TAUX_DECOTE = 0.4525;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>(default package) (30 avr. 2026 22:26:10)</div></body></html>

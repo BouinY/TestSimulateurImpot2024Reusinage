@@ -1,6 +1,7 @@
-package com.kerware.simulateur;
+package com.kerware.simulateur.simulateurOriginelle;
 
-import com.kerware.simulateur.simulateurOriginelle.Simulateur;
+import com.kerware.simulateur.ICalculateurImpot;
+import com.kerware.simulateur.SituationFamiliale;
 
 public class AdaptateurCodeHerite implements ICalculateurImpot{
 

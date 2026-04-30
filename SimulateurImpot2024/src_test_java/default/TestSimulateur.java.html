@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>TestSimulateur.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">(default package) (30 avr. 2026 22:26:10)</a> &gt; <a href="../../index.html" class="el_group">SimulateurImpot2024</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">TestSimulateur.java</span></div><h1>TestSimulateur.java</h1><pre class="source lang-java linenums">import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import com.kerware.simulateur.ICalculateurImpot;
+import com.kerware.simulateur.SituationFamiliale;
+import com.kerware.simulateur.simulateurOriginelle.AdaptateurCodeHerite;
+import com.kerware.simulateur.simulateurReusine.SimulateurReusine;
+
+
+<span class="fc" id="L13">public class TestSimulateur {</span>
+	static final int CODE_HERITE = 1;
+	static final int CODE_REUSINE = 2;
+	static final int CODE = CODE_REUSINE;
+	
+	static ICalculateurImpot calculateur;
+	
+	@BeforeAll
+	public static void prepareCalculateurImpot() {
+<span class="pc bpc" id="L22" title="2 of 3 branches missed.">		switch(CODE) {</span>
+<span class="nc" id="L23">			case CODE_HERITE -&gt; calculateur = new AdaptateurCodeHerite();</span>
+<span class="fc" id="L24">			case CODE_REUSINE -&gt; calculateur = new SimulateurReusine();</span>
+		}
+<span class="fc" id="L26">	}</span>
+
+	//Test des situations possibles
+	
+	@Test
+	@DisplayName(&quot;Test du calcul de l'impot pour un célibataire sans enfant&quot;)
+	public void testImpotSurRevenuNetPourUnCelibaitaireSansEnfant() {
+		//Arrange
+<span class="fc" id="L34">		calculateur.setRevenusNet(35000);</span>
+<span class="fc" id="L35">		calculateur.setSituationFamiliale(SituationFamiliale.CELIBATAIRE);</span>
+<span class="fc" id="L36">		calculateur.setNbEnfantsACharge(0);</span>
+<span class="fc" id="L37">		calculateur.setNbEnfantsSituationHandicap(0);</span>
+<span class="fc" id="L38">		calculateur.setParentIsole(false);</span>
+		
+		//Act
+<span class="fc" id="L41">		calculateur.calculImpotSurRevenuNet();</span>
+		
+		//Assert
+<span class="fc" id="L44">		assertEquals(2736, calculateur.getImpotSurRevenuNet());</span>
+<span class="fc" id="L45">		assertEquals(1, calculateur.getNbPartsFoyerFiscal());</span>
+<span class="fc" id="L46">	}</span>
+		
+	@Test
+	@DisplayName(&quot;Test du calcul de l'impôt pour un couple sans enfant&quot;)
+	public void testImpotPourUnCoupleSansEnfant() {
+	    // Arrange
+<span class="fc" id="L52">	    calculateur.setRevenusNet(70000);</span>
+<span class="fc" id="L53">	    calculateur.setSituationFamiliale(SituationFamiliale.MARIE);</span>
+<span class="fc" id="L54">	    calculateur.setNbEnfantsACharge(0);</span>
+<span class="fc" id="L55">	    calculateur.setNbEnfantsSituationHandicap(0);</span>
+<span class="fc" id="L56">	    calculateur.setParentIsole(false);</span>
+	    
+	    // Act
+<span class="fc" id="L59">	    calculateur.calculImpotSurRevenuNet();</span>
+	    
+	    // Assert
+<span class="fc" id="L62">	    assertEquals(5472, calculateur.getImpotSurRevenuNet());</span>
+<span class="fc" id="L63">	    assertEquals(2, calculateur.getNbPartsFoyerFiscal());</span>
+<span class="fc" id="L64">	}</span>
+	
+	@Test
+	@DisplayName(&quot;Test du calcul de l'impôt pour un couple avec enfants&quot;)
+	public void testImpotPourUnCoupleAvecEnfants() {
+	    // Arrange
+<span class="fc" id="L70">	    calculateur.setRevenusNet(70000);</span>
+<span class="fc" id="L71">	    calculateur.setSituationFamiliale(SituationFamiliale.MARIE);</span>
+<span class="fc" id="L72">	    calculateur.setNbEnfantsACharge(2);</span>
+<span class="fc" id="L73">	    calculateur.setNbEnfantsSituationHandicap(0);</span>
+<span class="fc" id="L74">	    calculateur.setParentIsole(false);</span>
+	    
+	    // Act
+<span class="fc" id="L77">	    calculateur.calculImpotSurRevenuNet();</span>
+	    
+	    // Assert
+<span class="fc" id="L80">	    assertEquals(3203, calculateur.getImpotSurRevenuNet());</span>
+<span class="fc" id="L81">	    assertEquals(3, calculateur.getNbPartsFoyerFiscal()); // 1 + 1 + 0.5 + 0.5 (Les enfant compte pour 0.5)</span>
+	
+	
+<span class="fc" id="L84">	}</span>
+	
+	@Test
+	@DisplayName(&quot;Test du calcul de l'impôt pour une personne divorcé avec enfants&quot;)
+	public void testImpotPourUnDivorceAvecEnfant() {
+	    // Arrange
+<span class="fc" id="L90">	    calculateur.setRevenusNet(35000);</span>
+<span class="fc" id="L91">	    calculateur.setSituationFamiliale(SituationFamiliale.DIVORCE);</span>
+<span class="fc" id="L92">	    calculateur.setNbEnfantsACharge(1);</span>
+<span class="fc" id="L93">	    calculateur.setNbEnfantsSituationHandicap(0);</span>
+<span class="fc" id="L94">	    calculateur.setParentIsole(false);</span>
+	    
+	    // Act
+<span class="fc" id="L97">	    calculateur.calculImpotSurRevenuNet();</span>
+	    
+	    // Assert
+<span class="fc" id="L100">	    assertEquals(1452, calculateur.getImpotSurRevenuNet());</span>
+<span class="fc" id="L101">	    assertEquals(1.5, calculateur.getNbPartsFoyerFiscal()); // 1 + 0.5 </span>
+<span class="fc" id="L102">	}	</span>
+	
+	@Test
+	@DisplayName(&quot;Test du calcul de l'impôt pour une personne veuf isolé avec enfants&quot;)
+	public void testImpotPourUnVeufAvecEnfant() {
+	    // Arrange
+<span class="fc" id="L108">	    calculateur.setRevenusNet(35000);</span>
+<span class="fc" id="L109">	    calculateur.setSituationFamiliale(SituationFamiliale.VEUF);</span>
+<span class="fc" id="L110">	    calculateur.setNbEnfantsACharge(1);</span>
+<span class="fc" id="L111">	    calculateur.setNbEnfantsSituationHandicap(0);</span>
+<span class="fc" id="L112">	    calculateur.setParentIsole(true);</span>
+	    
+	    // Act
+<span class="fc" id="L115">	    calculateur.calculImpotSurRevenuNet();</span>
+	    
+	    // Assert
+<span class="fc" id="L118">	    assertEquals(550, calculateur.getImpotSurRevenuNet());</span>
+<span class="fc" id="L119">	    assertEquals(2, calculateur.getNbPartsFoyerFiscal()); // 1 + 1 (Un parent isolé on leur enfant comptant pour 1 aulieu de 0.5)</span>
+<span class="fc" id="L120">	}	</span>
+
+	
+	@Test
+	@DisplayName(&quot;Test du calcul de l'impôt pour un couple avec enfant handicapé&quot;)
+	public void testImpotPourUnCoupleAvecEnfantHandicape() {
+	    // Arrange
+<span class="fc" id="L127">	    calculateur.setRevenusNet(70000);</span>
+<span class="fc" id="L128">	    calculateur.setSituationFamiliale(SituationFamiliale.MARIE);</span>
+<span class="fc" id="L129">	    calculateur.setNbEnfantsACharge(1);</span>
+<span class="fc" id="L130">	    calculateur.setNbEnfantsSituationHandicap(1);</span>
+<span class="fc" id="L131">	    calculateur.setParentIsole(false);</span>
+	    
+	    // Act
+<span class="fc" id="L134">	    calculateur.calculImpotSurRevenuNet();</span>
+	    
+	    // Assert
+<span class="fc" id="L137">	    assertEquals(3203, calculateur.getImpotSurRevenuNet());</span>
+<span class="fc" id="L138">	    assertEquals(3, calculateur.getNbPartsFoyerFiscal()); // 1 + 1 + 0.5 + 0.5</span>
+<span class="fc" id="L139">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>(default package) (30 avr. 2026 22:26:10)</div></body></html>

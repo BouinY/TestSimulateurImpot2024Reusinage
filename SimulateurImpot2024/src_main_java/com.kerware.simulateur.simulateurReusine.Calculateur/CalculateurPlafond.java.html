@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>CalculateurPlafond.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">(default package) (30 avr. 2026 22:26:10)</a> &gt; <a href="../../index.html" class="el_group">SimulateurImpot2024</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.kerware.simulateur.simulateurReusine.Calculateur</a> &gt; <span class="el_source">CalculateurPlafond.java</span></div><h1>CalculateurPlafond.java</h1><pre class="source lang-java linenums">package com.kerware.simulateur.simulateurReusine.Calculateur;
+
+import com.kerware.simulateur.simulateurReusine.ImpotDataConstante;
+
+<span class="nc" id="L5">public class CalculateurPlafond implements ImpotDataConstante {</span>
+	
+    public static double calcul(double montantImpotDeclarant, double montantImpot,double nbParts, double nbPartsDeclarant) {
+        // baisse impot
+<span class="fc" id="L9">        double baisseImpot = montantImpotDeclarant - montantImpot;</span>
+<span class="fc" id="L10">        System.out.println(&quot;Baisse d'impot avant plafond : &quot; + baisseImpot);</span>
+        
+        // dépassement plafond
+<span class="fc" id="L13">        double ecartParts = nbParts - nbPartsDeclarant;</span>
+
+<span class="fc" id="L15">        double plafond = (ecartParts / 0.5) * PLAFOND_POUR_DEMI_PART;</span>
+<span class="fc" id="L16">        System.out.println(&quot;Plafond : &quot; + plafond);</span>
+        
+<span class="fc bfc" id="L18" title="All 2 branches covered.">        if ( baisseImpot &gt;= plafond ) {</span>
+<span class="fc" id="L19">        	System.out.println(&quot;Baisse d'impot supérieur au plafond, le plafond est appliqué &quot;);</span>
+<span class="fc" id="L20">        	montantImpot = montantImpotDeclarant - plafond;</span>
+<span class="fc" id="L21">        	System.out.println(&quot;Montant après plafond : &quot; + montantImpot);</span>
+        }
+        
+        //La baisse d'impot n'est jamais appliquer si elle ne depasse pas le plafond, étant coder ainsi dans le simulateur originelle, je ne l'ai pas changer pour gharder les test cohérent.
+<span class="fc" id="L25">        return montantImpot;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>(default package) (30 avr. 2026 22:26:10)</div></body></html>

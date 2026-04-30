@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>CalculateurPartsDeclarant.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">(default package) (30 avr. 2026 22:26:10)</a> &gt; <a href="../../index.html" class="el_group">SimulateurImpot2024</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.kerware.simulateur.simulateurReusine.Calculateur</a> &gt; <span class="el_source">CalculateurPartsDeclarant.java</span></div><h1>CalculateurPartsDeclarant.java</h1><pre class="source lang-java linenums">package com.kerware.simulateur.simulateurReusine.Calculateur;
+
+import com.kerware.simulateur.SituationFamiliale;
+
+<span class="nc" id="L5">public class CalculateurPartsDeclarant {</span>
+    public static double calcul(SituationFamiliale situationFamiliale) {
+    	
+<span class="fc" id="L8">    	double nbPartsDeclarant = 0;</span>
+    	
+    	//Partie des déclarants
+<span class="pc bpc" id="L11" title="1 of 5 branches missed.">        switch ( situationFamiliale ) {</span>
+            case CELIBATAIRE:
+<span class="fc" id="L13">            	nbPartsDeclarant = 1; break;</span>
+            case MARIE:
+<span class="fc" id="L15">            	nbPartsDeclarant = 2; break;</span>
+            case DIVORCE:
+<span class="fc" id="L17">            	nbPartsDeclarant = 1; break;</span>
+            case VEUF:
+            	/*
+                if ( nbEnfantTotal == 0 ) {
+                	nbPartsDeclarant = 1;
+                } else {
+                	nbPartsDeclarant = 2;
+                }
+                */
+<span class="fc" id="L26">            	nbPartsDeclarant = 1; //Dans le code originel le if else est suivi de cette ligne le rendant inutile, je laisse le code car je ne sais pas si il fallait corrigée sachant que cela pour casser les test.</span>
+                break;
+        }
+        
+<span class="fc" id="L30">        System.out.println(&quot;Nombre de parts declarant : &quot; + nbPartsDeclarant);</span>
+<span class="fc" id="L31">        return nbPartsDeclarant;        </span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>(default package) (30 avr. 2026 22:26:10)</div></body></html>

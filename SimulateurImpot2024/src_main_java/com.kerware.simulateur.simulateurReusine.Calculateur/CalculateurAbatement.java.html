@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>CalculateurAbatement.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">(default package) (30 avr. 2026 22:26:10)</a> &gt; <a href="../../index.html" class="el_group">SimulateurImpot2024</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.source.html" class="el_package">com.kerware.simulateur.simulateurReusine.Calculateur</a> &gt; <span class="el_source">CalculateurAbatement.java</span></div><h1>CalculateurAbatement.java</h1><pre class="source lang-java linenums">package com.kerware.simulateur.simulateurReusine.Calculateur;
+
+import com.kerware.simulateur.simulateurReusine.ImpotDataConstante;
+
+<span class="nc" id="L5">public class CalculateurAbatement implements ImpotDataConstante {</span>
+	
+	
+    public static double calcul(int revenuNet)  {
+<span class="fc" id="L9">        double abatement = revenuNet * TAUX_ABATEMENT;</span>
+        
+<span class="fc" id="L11">        System.out.println(&quot;L'abattement avant l'application des paliers est : &quot; + abatement );</span>
+       
+<span class="pc bpc" id="L13" title="1 of 2 branches missed.">        if (abatement &gt; PALIER_MAXIMUM_POUR_ABATEMENT) {</span>
+<span class="nc" id="L14">            abatement = PALIER_MAXIMUM_POUR_ABATEMENT;</span>
+        }
+
+<span class="pc bpc" id="L17" title="1 of 2 branches missed.">        if (abatement &lt; PALIER_MINIMUM_POUR_ABATEMENT) {</span>
+<span class="nc" id="L18">            abatement = PALIER_MINIMUM_POUR_ABATEMENT;</span>
+        }
+        
+<span class="fc" id="L21">        System.out.println(&quot;L'abattement après l'application des paliers est : &quot; + abatement);</span>
+<span class="fc" id="L22">        return abatement;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span>(default package) (30 avr. 2026 22:26:10)</div></body></html>

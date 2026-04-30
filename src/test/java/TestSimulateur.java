@@ -4,9 +4,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.kerware.simulateur.AdaptateurCodeHerite;
 import com.kerware.simulateur.ICalculateurImpot;
 import com.kerware.simulateur.SituationFamiliale;
+import com.kerware.simulateur.simulateurOriginelle.AdaptateurCodeHerite;
 import com.kerware.simulateur.simulateurReusine.SimulateurReusine;
 
 
